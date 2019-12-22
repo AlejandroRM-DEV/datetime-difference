@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DVR ajuste de tiempo</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <input type="datetime-local" class="form-control" id="real_date">
+        </div>
+        <div class="col-6">
+            <input type="datetime-local" class="form-control" id="dvr_date">
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12 text-center">
+            <button class="btn btn-info" onclick="calculate()">Calcular desfase de tiempo</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="alert alert-primary" role="alert">
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-6">
+            <input type="datetime-local" class="form-control" id="inicio_date">
+        </div>
+        <div class="col-6">
+            <input type="datetime-local" class="form-control" id="inicio_dvr_date" disabled>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-6">
+            <input type="datetime-local" class="form-control" id="fin_date">
+        </div>
+        <div class="col-6">
+            <input type="datetime-local" class="form-control" id="fin_dvr_date" disabled>
+        </div>
+    </div>
+</div>
+<script>
+    function calculate() {
+        var ms = moment(document.getElementById('dvr_date').value, "YYYY-MM-DD HH:mm").diff(moment(document.getElementById('real_date').value, "YYYY-MM-DD HH:mm"));
+        var d = moment.duration(ms);
+        var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+
+        document.getElementsByClassName('alert')[0].innerHTML = 'Desfase de ' +
+            d._data.years + ' años, ' +
+            d._data.months + ' meses, ' +
+            d._data.days + ' días, ' +
+            d._data.hours + ' horas, ' +
+            d._data.minutes + ' minutos, ' +
+            d._data.seconds + ' segundos, ' +
+            d._data.milliseconds + ' milisegundos. ';
+
+        var seconds = s.split(':')[2];
+        var minutes = s.split(':')[1];
+        var hours = s.split(':')[0];
+
+        var inicio_dvr = moment(moment(document.getElementById('inicio_date').value, "YYYY-MM-DD HH:mm").format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm')
+            .add(seconds, 'seconds')
+            .add(minutes, 'minutes')
+            .add(hours, 'hours')
+            .format('YYYY-MM-DD HH:mm');
+        document.getElementById('inicio_dvr_date').value = inicio_dvr.replace(' ','T');
+
+        var fin_dvr = moment(moment(document.getElementById('fin_date').value, "YYYY-MM-DD HH:mm").format('YYYY-MM-DD HH:mm'), 'YYYY-MM-DD HH:mm')
+            .add(seconds, 'seconds')
+            .add(minutes, 'minutes')
+            .add(hours, 'hours')
+            .format('YYYY-MM-DD HH:mm');
+        document.getElementById('fin_dvr_date').value = fin_dvr.replace(' ','T');
+    }
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
