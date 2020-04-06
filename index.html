@@ -66,7 +66,7 @@
 </div>
 <script>
     function calculate() {
-		const FORMAT = 'YYYY-MM-DD HH:mm';
+		const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 		
         let ms = moment(document.getElementById('dvr_date').value, FORMAT).diff(moment(document.getElementById('real_date').value, FORMAT));
         let d = moment.duration(ms);
